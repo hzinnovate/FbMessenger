@@ -7,6 +7,8 @@ import {sendMessageToDb} from '../Api/firebase'
 import firebase from '../Config/firebase';
 import 'firebase/firestore'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Entypo, Ionicons } from '@expo/vector-icons'
+
 const db = firebase.firestore()
 
 class ChatRoom extends React.Component {
@@ -63,22 +65,46 @@ class ChatRoom extends React.Component {
             <FlatList 
             data = {messages}
             renderItem = {(item)=>{
-              console.log(item)
-              // const messagesStyle = item.data.userId === myId ? 
-              // {backgroundColor: 'blue', color: 'white', marginBottom: 48, marginLeft: '50vw'} :
-              // {backgroundColor: 'darkgray', color: 'white', marginBottom: 48, marginLeft: '50vw'}
-              //   return <View style={messagesStyle}>
-              //     <Text>{item.data.message}</Text>
-              //     <Text>{moment(item.data.timeStamp).fromNow()}</Text>
-              //   </View>
+              const mainStyle = item.item.data.userId === myId ? 
+              {flex: 1, flexDirection: 'row', justifyContent: 'flex-start'} : 
+              {flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}
+              const messagesStyle = item.item.data.userId === myId ? 
+              {backgroundColor: 'blue', color: 'white', marginBottom: 20, borderRadius: 30, padding: 5} :
+              {backgroundColor: 'darkgray', color: 'white', marginBottom: 20,  borderRadius: 30, padding: 5}
+                return(
+                  <View style={{flex:1, flexDirection: 'column'}}>
+                    <View style={mainStyle}>
+                <View style={messagesStyle}>
+                  <Text style={{color: 'white', }}>{item.item.data.message}</Text>
+                  <Text>{moment(item.item.data.timeStamp).fromNow()}</Text>
+                </View>
+                </View>
+                </View>
+                  ) 
             }}
             />
           }
           </ScrollView>
           <View style={{ height: 40, width: '100%' , flexDirection: 'row'}}>
-          <TextInput value={text} onChangeText={text=> this.setState({text})} style={{flex: 2, height: '100%',backgroundColor: 'grey', paddingLeft: 10, color: '#fff' }} placeholder={'Enter text here'} />
-          <TouchableOpacity onPress={()=>this.sendMessage()} style={{flex: 1, backgroundColor: 'blue'}}>
-            <Text style={{color: 'white'}}>Send It</Text>
+          <TouchableOpacity style={{flex: 1}}>
+          <Ionicons name='ios-camera' size={30} />
+          </TouchableOpacity>
+          <TouchableOpacity style={{flex: 1, margin: 2}}>
+          <Ionicons name='md-photos' size={30} />
+          </TouchableOpacity>
+          <TouchableOpacity style={{flex: 1}}>
+          <Entypo name='mic' size={30} />
+          </TouchableOpacity>
+          <TouchableOpacity style={{flex: 1}}>
+          <Entypo name='location' size={30} />
+          </TouchableOpacity>
+          <TouchableOpacity style={{flex: 1}}>
+          <Entypo name='emoji-happy' size={30} />
+          </TouchableOpacity>
+          <TextInput value={text} onChangeText={text=> this.setState({text})} style={{flex: 3, height: '100%',backgroundColor: 'grey', paddingLeft: 10, color: '#fff' }} placeholder={'Enter text here'} />
+          <TouchableOpacity onPress={()=>this.sendMessage()} style={{flex: 1}}>
+          <Ionicons name='ios-send' size={30} />
+                      {/* <Text style={{color: 'white'}}>Send It</Text> */}
           </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
