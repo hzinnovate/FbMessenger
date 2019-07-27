@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput,Alert } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput,Alert, ScrollView, KeyboardAvoidingView,SafeAreaView } from 'react-native';
 import {register} from '../Api/firebase'
 
 class SignUp extends React.Component {
@@ -38,7 +37,6 @@ class SignUp extends React.Component {
     render() {
         const { email, password, confirmPassword, userImageUri } = this.state
         return (
-            <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                 <View style={styles.container}>
                     <View style={{ flex: 0.8, justifyContent: 'center', alignItems: 'center' }}>
                         <Image style={{ height: 200, width: 200 }} source={require('../assets/Logo.png')} />
@@ -82,7 +80,6 @@ class SignUp extends React.Component {
                         </View>
                     </View>
                 </View>
-            </KeyboardAvoidingView>
         );
     }
 }

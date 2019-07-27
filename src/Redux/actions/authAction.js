@@ -1,3 +1,4 @@
+
 const updateuser = (user) => {
     return {
         type : 'UPDATE_USER',
@@ -11,8 +12,21 @@ const removeUser = () => {
         user : null
     }
 }
-
+const objForChat = (chatRoomObj) => {
+    return {
+        type : 'CHAT_OBJ',
+        chatRoomObj
+    }
+}
+const removeObjForChat = () => {
+    return {
+        type : 'REMOVE_CHAT_OBJ',
+        chatRoomObj: null
+    }
+}
 export {
     updateuser,
-    removeUser
+    removeUser,
+    objForChat,
+    removeObjForChat
 }

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Alert} from 'react-native';
-import { KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Alert,KeyboardAvoidingView, SafeAreaView, ScrollView} from 'react-native';
 import {loginAccount} from '../Api/firebase/index';
 import { updateuser } from '../Redux/actions/authAction'
 import { connect } from 'react-redux'
@@ -36,7 +35,6 @@ class Login extends Component{
     render() {
         const { email, password } = this.state
         return (
-            <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                 <View style={styles.container}>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Image style={{ height: 200, width: 200 }} source={require('../assets/Logo.png')} />
@@ -76,7 +74,6 @@ class Login extends Component{
                         <Text style={{ margin: 20, fontSize: 16, fontWeight: 'bold' }}>FORGOT PASSWORD</Text>
                     </View>
                 </View>
-            </KeyboardAvoidingView>
         );
     }
 }
