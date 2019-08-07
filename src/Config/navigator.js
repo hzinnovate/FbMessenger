@@ -3,14 +3,13 @@ import { createMaterialTopTabNavigator, createBottomTabNavigator, createAppConta
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons'
 import * as Auth from '../AuthScreens'
-import * as MessengerScreens from '../messengerScreens';
+import * as MessengerScreens from '../messengerScreens'
 import { connect } from 'react-redux'
 
 
 const ChatRoom = createStackNavigator({
     ChatRoom: {
         screen: MessengerScreens.ChatRoom,
-    title: `Chat`,
         navigationOptions: () => ({
             headerRight: (
                 <View style={{flexDirection: 'row'}}>
@@ -25,9 +24,6 @@ const ChatRoom = createStackNavigator({
                     </TouchableOpacity>
                 </View>
             ),
-            headerLeft : (
-                <Image source={require('../assets/adduser.png')}  color='black' style={{height: 40, width: 40, marginLeft: 15, borderRadius: 100}} />
-            )
         }),
     },
 })
@@ -36,7 +32,6 @@ const ChatList = createStackNavigator({
     Chat: {
         screen: MessengerScreens.ChatList,
         navigationOptions: () => ({
-            title: `Chats`,
             headerRight: (
                 <View style={{flexDirection: 'row'}}>
                     <TouchableOpacity style={{marginRight: 20,padding: 7,borderRadius: 100, backgroundColor: '#EFF0EF'}}>
@@ -50,9 +45,6 @@ const ChatList = createStackNavigator({
                     </TouchableOpacity>
                 </View>
             ),
-            headerLeft : (
-                <Image source={require('../assets/adduser.png')}  color='black' style={{height: 40, width: 40, marginLeft: 15, borderRadius: 100}} />
-            )
         }),
     }
 })
@@ -153,7 +145,10 @@ const MainSwitch = createSwitchNavigator({
     login: Auth.Login,
     signup: Auth.SignUp,
     messenger: MainTabBottom,
-    ChatRoom: ChatRoom
+    ChatRoom: ChatRoom,
+    map: MessengerScreens.Map
+},{
+    backBehavior: 'history'
 })
 
 const mapStateToProps = (state) => {

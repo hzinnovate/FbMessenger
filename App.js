@@ -1,7 +1,7 @@
 import React from 'react';
 import Main from './src'
-import { YellowBox } from 'react-native';
 import _ from 'lodash';
+import { YellowBox } from 'react-native';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 const _console = _.clone(console);
@@ -10,4 +10,10 @@ console.warn = message => {
     _console.warn(message);
   }
 };
-export default function App() {return (<Main />);}
+export default class App extends React.Component {
+  render(){
+    return(
+      <Main />
+    )
+  }
+}

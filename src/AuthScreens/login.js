@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Alert,KeyboardAvoidingView, SafeAreaView, ScrollView} from 'react-native';
-import {loginAccount} from '../Api/firebase/index';
+import {StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Alert,KeyboardAvoidingView, SafeAreaView, ScrollView} from 'react-native';
+import {loginAccount, loginWithFacebookFirebasse} from '../Api/firebase/index';
 import { updateuser } from '../Redux/actions/authAction'
 import { connect } from 'react-redux'
-
+import * as Facebook from 'expo-facebook';
+import firebase from 'firebase'
 
 class Login extends Component{
     constructor() {
@@ -31,6 +32,18 @@ class Login extends Component{
         } catch (e){
             Alert.alert(e.message)
         }
+    }
+    async loginWithFacebook(){
+        try {
+            const dat = await Facebook.logInWithReadPermissionsAsync('2368773766541922');
+            if (dat.type === 'success') {
+              const credential = await firebase.auth.FacebookAuthProvider.credential(dat.token)
+              const user = await loginWithFacebookFirebasse(credential)
+              await this.nav(user)
+          }  
+        } catch ({ message }) {
+            console.log(message)
+          }
     }
     render() {
         const { email, password } = this.state
@@ -67,6 +80,7 @@ class Login extends Component{
                             <Text style={{color: 'white'}}>CREATE NEW ACCOUNT</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
+                            onPress={()=> this.loginWithFacebook()}
                             style={{ backgroundColor: '#0080FE', width: '90%', borderRadius: 15, height: 50, justifyContent: 'center', alignItems: 'center', margin: 5 }}
                         >
                             <Text style={{color: 'white'}}>LOG IN WITH FACEBOOK</Text>

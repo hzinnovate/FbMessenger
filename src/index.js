@@ -1,7 +1,4 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import {Login, SignUp} from './AuthScreens'
-import {ChatList} from './messengerScreens'
 import MainSwitch from './Config/navigator'
 import {Provider} from 'react-redux';
 import { store, persistor } from './Redux/Store';
