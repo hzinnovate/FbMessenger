@@ -25,6 +25,12 @@ const reducer = (state = {}, action) => {
         case 'REMOVE_ALL_USERS' : {
             return {...state, allUsers: null}
         }
+        case 'STORIES' : {
+            return {...state, stories: action.stories}
+        }
+        case 'REMOVE_STORIES': {
+            return {...state, stories: null}
+        }
         default: {
             return state
         }

@@ -141,7 +141,7 @@ function sendMessageToDb(roomId, message, myId) {
     }
     return db.collection('chatrooms').doc(roomId).collection('messages').add(obj)
 }
-function sendLocationToDb(roomId, location, myId){
+function sendLocationToDb(roomId, location, myId) {
     const obj = {
         roomId,
         text: false,
@@ -170,19 +170,19 @@ function sendImageToDb(roomId, image, myId) {
             db.collection('chatrooms').doc(roomId).collection('messages').add(obj)
         })
     })
-            
+
 }
-function sendStoryToDb(user, story){
+function sendStoryToDb(user, story) {
     const obj = {
         uid: user.uid,
         name: user.name,
         profilePic: user.profilePic,
         timeStamp: Date.now()
     }
-    storage.ref(`Stories/${user.uid}`).child(`${obj.timeStamp}`).put(story).then(e =>{
-        e.ref.getDownloadURL().then(url =>{
-            obj.story = url,
-            obj.StorageKey = e.metadata.name
+    storage.ref(`Stories/${user.uid}`).child(`${obj.timeStamp}`).put(story).then(e => {
+        e.ref.getDownloadURL().then(url => {
+                obj.storageName = e.metadata.name,
+                obj.story = url,
             db.collection('Stories').add(obj)
         })
     })

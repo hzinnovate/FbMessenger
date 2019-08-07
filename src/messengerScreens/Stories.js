@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
+import { getStories } from '../Redux/actions/authAction'
 import * as ImagePicker from 'expo-image-picker';
 import { sendStoryToDb } from '../Api/firebase'
 import firebase from '../Config/firebase';
@@ -15,49 +16,47 @@ class Stories extends React.Component {
   constructor() {
     super();
     this.state = {
-      usersArray: [],
-      Stories: []
+      stories: []
     }
-    this.updateState = this.updateState.bind(this)
-    this.StoriesUpdate = this.StoriesUpdate.bind(this)
   }
 
-
-  componentDidMount() {
-    this.getUsers(this.props.user.uid)
-    this.getStories()
-  }
-  StoriesUpdate(Stories) {
-    this.setState({ Stories })
-  }
-  getStories() {
-    let updateStoriestoState = this.StoriesUpdate
-    db.collection('Stories').onSnapshot(function (querySnapshot) {
-      const Stories = [];
-      querySnapshot.forEach(function (doc) {
-        Stories.push(doc.data())
-      }
-      )
-      updateStoriestoState(Stories)
-    }
-    )
-  }
-
-  updateState(usersArray) {
-    this.setState({ usersArray })
-  }
-  getUsers(myUid) {
-    let updateStateFromDb = this.updateState
-    db.collection('users').onSnapshot(function (querySnapshot) {
-      const usersArry = [];
-      querySnapshot.forEach(function (doc) {
-        if (doc.data().uid !== myUid) {
-          usersArry.push(doc.data());
+  static getDerivedStateFromProps(nextProps) {
+    const { stories, allUsers, user } = nextProps
+    const storiesObj = []
+    if (stories) {
+      for (var key in allUsers) {
+        allUsers[key].stories = []
+        for (var key2 in stories) {
+          if (allUsers[key].uid === stories[key2].data.uid) {
+            const oneday = 60 * 60 * 24 * 1000
+            const dateNow = Date.now()
+            const calculate = stories[key2].data.timeStamp + oneday;
+            if(calculate > dateNow){
+              allUsers[key].stories.push({
+                storyId: stories[key2]._id,
+                storageName: stories[key2].data.storageName,
+                storyCreateTime: stories[key2].data.timeStamp,
+                story: stories[key2].data.story
+              })
+            }
+          }
         }
-      });
-      updateStateFromDb(usersArry)
-    })
+      }
+      for(var v in allUsers){
+        if(allUsers[v].stories.length){
+          storiesObj.push(allUsers[v])
+        }
+      }
+      return {
+        stories: storiesObj
+      }
+    } else {
+      return {
+        stories: []
+      }
+    }
   }
+
   async pickImage() {
     try {
       const picImage = await ImagePicker.launchImageLibraryAsync()
@@ -88,14 +87,14 @@ class Stories extends React.Component {
               </View>
             </TouchableOpacity>
           </View>
-          {!!this.state.Stories.length &&
+          {!!this.state.stories.length &&
             <FlatList
-              data={this.state.Stories}
+              data={this.state.stories}
               renderItem={({ item }) =>
                 <View style={{ width: '40%', height: 250, borderWidth: 2, borderColor: 'black', margin: 10, borderRadius: 20, overflow: 'hidden' }}>
                   <TouchableOpacity>
                     <View>
-                      <Image source={{ uri: item.story }} style={{ height: '100%', width: '100%'}} />
+                      <Image source={{ uri: item.stories[item.stories.length - 1].story }} style={{ height: '100%', width: '100%'}} />
                     </View>
                     <View style={{ position: 'absolute', top: 0, left: 0, alignItems: 'center', backgroundColor: 'black', borderRadius: 100, height: 50, width: 50, justifyContent: 'center' }}>
                       <Image source={{ uri: item.profilePic }} style={{ height: '100%', width: '100%' , borderRadius: 100 }} />
@@ -118,7 +117,15 @@ class Stories extends React.Component {
 const mapStateToProps = (state) => {
   return {
     user: state.reducer.user,
+    allUsers: state.reducer.allUsers,
+    stories: state.reducer.stories
   }
 }
-export default connect(mapStateToProps)(Stories)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getStories: () => dispatch(getStories()),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Stories)
 

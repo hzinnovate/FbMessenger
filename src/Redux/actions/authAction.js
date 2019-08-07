@@ -2,14 +2,12 @@ import firebase from '../../Config/firebase';
 import 'firebase/firestore';
 const db = firebase.firestore()
 
-const getAllUsers = (myUid) => {
+const getAllUsers = () => {
     return (dispatch, getState) => {
         db.collection('users').onSnapshot(function (querySnapshot) {
             const allUsers = []
             querySnapshot.forEach(function (doc) {
-                if (doc.data().uid !== myUid) {
                     allUsers.push(doc.data());
-                }
             })
             dispatch({ type: 'GET_All_USERS', allUsers })
         })
@@ -66,6 +64,24 @@ const removeMessages = () => {
         messages: null
     }
 }
+const getStories = () => {
+    return (dispatch) => {
+        db.collection('Stories')
+            .onSnapshot(snapshot => {
+                const stories = []
+                snapshot.forEach(elem => {
+                    stories.push({ data: elem.data(), _id: elem.id })
+                })
+                dispatch({ type: 'STORIES', stories })
+            })
+    }
+}
+const removeStory = () =>{
+    return{
+        type: 'REMOVE_STORIES',
+        stories: null
+    }
+}
 export {
     updateuser,
     removeUser,
@@ -74,5 +90,7 @@ export {
     getAllUsers,
     chatMessages,
     removeAllUsers,
-    removeMessages
+    removeMessages,
+    getStories,
+    removeStory
 }

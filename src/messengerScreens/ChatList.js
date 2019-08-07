@@ -16,9 +16,16 @@ class ChatList extends React.Component {
     }
   }
   static getDerivedStateFromProps(nextProps){
-    if(nextProps.allUsers !== undefined, nextProps.allUsers !== null){
+    if(nextProps.allUsers){
+        const usersArray = []
+        const allUsers = nextProps.allUsers
+        for(var key in allUsers){
+          if(allUsers[key].uid !== nextProps.user.uid){
+            usersArray.push(allUsers[key])
+          }
+        }
       return{
-        usersArray : nextProps.allUsers
+        usersArray : usersArray
       }
     }else{
       return{
