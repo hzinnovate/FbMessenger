@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Alert,KeyboardAvoidingView, SafeAreaView, ScrollView} from 'react-native';
 import {loginAccount, loginWithFacebookFirebasse} from '../Api/firebase/index';
-import { updateuser } from '../Redux/actions/authAction'
+import { updateuser, getAllUsers } from '../Redux/actions/authAction'
 import { connect } from 'react-redux'
 import * as Facebook from 'expo-facebook';
 import firebase from 'firebase'
@@ -18,6 +18,7 @@ class Login extends Component{
             const user = await data
             try {
                 await this.props.updateuser(user)
+                await this.props.getAllUsers(user.uid)
                 await this.props.navigation.navigate('authVerify')
               } catch (error) {
                     console.log(error)
@@ -107,6 +108,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         updateuser: (user) => dispatch(updateuser(user)),
+        getAllUsers: (myUid) => dispatch(getAllUsers(myUid))
     }
 }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, SafeAreaView, KeyboardAvoidingView, ScrollView, View, Image } from 'react-native';
 import Constants from 'expo-constants';
 import { connect } from 'react-redux'
+import { chatMessages } from '../Redux/actions/authAction'
 import ChatComponent from './ChatComponent'
 import SendMessageComponent from './SendMessageComponent';
 import EmojiSelector from 'react-native-emoji-selector'
@@ -39,6 +40,7 @@ class ChatRoom extends React.Component {
   };
   componentDidMount() {
     this.props.navigation.setParams(this.props.chatRoomObj.chatUser)
+    this.props.chatMessages()
   }
   showHideEmoji(e){
     this.setState({emojiInput: e, emoji: ''})
@@ -48,9 +50,9 @@ class ChatRoom extends React.Component {
       <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView keyboardVerticalOffset={Constants.statusBarHeight + 62}
           style={styles.container} behavior="padding">
-          <ScrollView invertStickyHeaders={false} style={styles.container} >
+            <View style={{flex: 1}}>
             <ChatComponent />
-          </ScrollView>
+            </View>
           <SendMessageComponent navigation={this.props.navigation} showHideEmoji={this.showHideEmoji} emojiInput={this.state.emojiInput} emoji={this.state.emoji} />
         </KeyboardAvoidingView>
         {this.state.emojiInput &&
@@ -79,5 +81,12 @@ const mapStateToProps = (state) => {
     chatRoomObj: state.reducer.chatRoomObj
   }
 }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    chatMessages: () => dispatch(chatMessages())
+  }
+}
 
-export default connect(mapStateToProps)(ChatRoom)
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatRoom)

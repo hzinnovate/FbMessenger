@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, FlatList } from 'react-native';
-import { objForChat } from '../Redux/actions/authAction'
+import { StyleSheet, Text, View, ScrollView, Image, FlatList, ActivityIndicator } from 'react-native';
+import { objForChat, removeMessages, removeObjForChat } from '../Redux/actions/authAction'
 import { connect } from 'react-redux'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from '../Config/firebase';
@@ -14,8 +14,18 @@ class ChatList extends React.Component {
     this.state = {
       usersArray: [],
     }
-    this.updateState = this.updateState.bind(this)
   }
+  static getDerivedStateFromProps(nextProps){
+    if(nextProps.allUsers !== undefined, nextProps.allUsers !== null){
+      return{
+        usersArray : nextProps.allUsers
+      }
+    }else{
+      return{
+        usersArray: []
+      }
+    }
+  }  
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'Chats',
@@ -29,23 +39,8 @@ class ChatList extends React.Component {
 
   componentDidMount() {
     this.props.navigation.setParams(this.props.user)
-    const myUid = this.props.user.uid;
-    this.getUsers(myUid)
-  }
-  updateState(usersArray) {
-    this.setState({ usersArray })
-  }
-  getUsers(myUid) {
-    let updateStateFromDb = this.updateState
-    db.collection('users').onSnapshot(function (querySnapshot) {
-      const usersArry = [];
-      querySnapshot.forEach(function (doc) {
-        if (doc.data().uid !== myUid) {
-          usersArry.push(doc.data());
-        }
-      });
-      updateStateFromDb(usersArry)
-    })
+    this.props.removeObjForChat();
+    this.props.removeMessages()
   }
   async startChat(chatUser) {
     const friendId = chatUser.uid;
@@ -61,15 +56,16 @@ class ChatList extends React.Component {
 
   ChatListRender() {
     const { usersArray } = this.state
+
     return (<View style={{ paddingTop: 10 }}>
       <FlatList
         data={usersArray}
         renderItem={({item}) =>
           <TouchableOpacity
             onPress={() => { this.startChat(item) }}
-            style={{ height: 60, padding: 5, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+            style={{ padding: 5, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
             <View
-              style={{ flex: 1 }}>
+              style={{ flex: 1, paddingTop: 5}}>
               <Image
                 source={{uri: item.profilePic}}
                 color='black'
@@ -92,23 +88,33 @@ class ChatList extends React.Component {
   }
   render() {
     return (
+      <View>
+        {!(!!this.state.usersArray.length) && 
+      <View>
+        <ActivityIndicator animating={!(!!this.state.usersArray.length)} size="large" color="#0000ff" />
+      </View>
+      }
       <ScrollView>
         <View style={{ flex: 1 }}>
           {this.ChatListRender()}
         </View>
       </ScrollView>
+      </View>
     );
   }
 }
 const mapStateToProps = (state) => {
   return {
-    user: state.reducer.user
+    user: state.reducer.user,
+    allUsers: state.reducer.allUsers
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    objForChat: (chatObj) => dispatch(objForChat(chatObj))
+    objForChat: (chatObj) => dispatch(objForChat(chatObj)),
+    removeMessages: () => dispatch(removeMessages()),
+    removeObjForChat: ()=> dispatch(removeObjForChat())
   }
 }
 

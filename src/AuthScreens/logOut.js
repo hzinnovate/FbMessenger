@@ -3,11 +3,14 @@ import { TouchableOpacity } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { Entypo } from '@expo/vector-icons';
 import { connect } from 'react-redux';
-import { removeUser } from '../Redux/actions/authAction';
+import { removeUser, removeAllUsers, removeMessages, removeObjForChat } from '../Redux/actions/authAction';
 
 class LogOut extends React.Component {
     logout() {
         try {
+            this.props.removeMessages();
+            this.props.removeObjForChat();
+            this.props.removeAllUsers();
             this.props.removeUser();
             console.log('logOut');
             this.props.navigation.navigate('authVerify')
@@ -39,7 +42,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        removeUser: () => dispatch(removeUser())
+        removeUser: () => dispatch(removeUser()),
+        removeMessages: () => dispatch(removeMessages()),
+        removeAllUsers: () => dispatch(removeAllUsers()),
+        removeObjForChat: () => dispatch(removeObjForChat())
     }
 }
 

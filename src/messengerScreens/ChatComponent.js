@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import firebase from '../Config/firebase'
 import MapView, { Marker } from 'react-native-maps';
 import 'firebase/firestore'
+import { ScrollView } from 'react-native-gesture-handler';
 const db = firebase.firestore()
 
 class ChatComponent extends React.Component {
@@ -14,32 +15,30 @@ class ChatComponent extends React.Component {
             messages: []
         }
     }
-    componentDidMount() {
-        this.getAllMessage();
+   
+    static getDerivedStateFromProps(nextProps){
+        // console.log(nextProps.chatRoomObj.messages)
+        if(nextProps.messages !== undefined, nextProps.messages !== null){
+            return{
+                messages: nextProps.messages
+            }
+        }else{
+            return{
+                messages: []
+            }
+        }
     }
-    async getAllMessage() {
-        const roomId = this.props.chatRoomObj.chatRoom.roomId;
-        db.collection('chatrooms').doc(roomId).collection('messages')
-            .orderBy('timeStamp')
-            .onSnapshot(snapshot => {
-                const messages = []
-                snapshot.forEach(elem => {
-                    messages.push({ data: elem.data(), _id: elem.id })
-                })
-                this.setState({ messages })
-            })
-    }
+
+
     render() {
         const myId = this.props.user.uid
         const { messages } = this.state
         if (!!messages.length) {
             return (
-                <View>
                     <FlatList
-                        data={messages}
+                    inverted={true}
+                        data={messages.reverse()}
                         renderItem={({ item }) => {
-                            console.log(item.data.image)
-
                             const mainStyle = item.data.userId === myId ?
                                 { flex: 1, flexDirection: 'row', justifyContent: 'flex-end' } :
                                 { flex: 1, flexDirection: 'row', justifyContent: 'flex-start' }
@@ -84,7 +83,6 @@ class ChatComponent extends React.Component {
                         }}
                         keyExtractor={(item, index) => index.toString()}
                     />
-                </View>
             )
         } else {
             return (<Text>No Messages Here</Text>)
@@ -95,7 +93,8 @@ class ChatComponent extends React.Component {
 const mapStateToProps = (state) => {
     return {
         user: state.reducer.user,
-        chatRoomObj: state.reducer.chatRoomObj
+        chatRoomObj: state.reducer.chatRoomObj,
+        messages: state.reducer.messages
     }
 }
 

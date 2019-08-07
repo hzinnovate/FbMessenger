@@ -17,7 +17,7 @@ class Map extends React.Component {
   async sendMessage() {
     await sendLocationToDb(this.props.chatRoomObj.chatRoom.roomId, this.state.location, this.props.user.uid)
     this.setState({ location: null },()=>{
-      this.props.navigation.navigate('ChatRoom')
+      this.props.navigation.goBack(null)
     })
 }
   componentWillMount() {
@@ -58,7 +58,7 @@ class Map extends React.Component {
       <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-around'}}>
         <View style={{justifyContent: 'center', alignItems: 'center' }}>
           <TouchableOpacity onPress={()=>{
-            this.props.navigation.navigate('ChatRoom')
+            this.props.navigation.goBack(null)
           }} style={{width: 50, height: 50, borderRadius: 100, backgroundColor: 'red',justifyContent: 'center', alignItems: 'center'}}>
             <Text>X</Text>
           </TouchableOpacity>

@@ -1,3 +1,4 @@
+
 const reducer = (state = {}, action) => {
     switch(action.type){
         case 'UPDATE_USER' : {
@@ -11,6 +12,18 @@ const reducer = (state = {}, action) => {
         }
         case 'REMOVE_CHAT_OBJ' : {
             return {...state, chatRoomObj: null}
+        }
+        case 'MESSAGES' : {
+            return {...state, messages: action.messages}
+        }
+        case 'REMOVE_MESSAGES': {
+            return {...state, messages: null}
+        }
+        case 'GET_All_USERS' : {
+            return {...state, allUsers: action.allUsers}
+        }
+        case 'REMOVE_ALL_USERS' : {
+            return {...state, allUsers: null}
         }
         default: {
             return state
