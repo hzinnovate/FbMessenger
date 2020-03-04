@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage } from 'react-native'; // Native LocalStorage
+// import storage from 'redux-persist/lib/storage'; // Web LocalStorage
 import thunk from 'redux-thunk';
 import rootReducer from './rootReducer'
 
